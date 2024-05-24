@@ -1,0 +1,28 @@
+version: '3'
+services:
+  mysql:
+    image: 'mysql:latest'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=akshansh
+    container_name: mysqldba
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 30s
+      retries: 5
+    networks:
+      - ecommerce
+
+  mypythonapp:
+    build: ./
+    container_name: mypythonapp
+    depends_on:
+      - mysql
+    stdin_open: true
+    tty: true
+    networks:
+      - ecommerce
+
+networks:
+  ecommerce:
+    external: true
